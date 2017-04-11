@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hiveview.dao.IProductDao" >
+  <resultMap id="BaseResultMap" type="com.hiveview.entity.Product" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="picture" property="picture" jdbcType="VARCHAR" />
+    <result column="class_id" property="classId" jdbcType="BIGINT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="BIGINT" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="hits" property="hits" jdbcType="INTEGER" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="attribute" property="attribute" jdbcType="VARCHAR" />
+    <result column="keywords" property="keywords" jdbcType="VARCHAR" />
+    <result column="market_price" property="marketPrice" jdbcType="DECIMAL" />
+    <result column="real_price" property="realPrice" jdbcType="DECIMAL" />
+    <result column="className" property="className" jdbcType="VARCHAR" />
+    <result column="weight_value" property="weightValue" jdbcType="INTEGER" />
+    <result column="recommend" property="recommend" jdbcType="INTEGER" />
+    <association property="member" javaType="com.hiveview.entity.Member">
+      <result column="memberName" property="name" jdbcType="VARCHAR" />
+      <result column="head_portrait" property="headPortrait" jdbcType="VARCHAR" />
+      <result column="description" property="description" jdbcType="VARCHAR" />
+      <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+      <result column="address" property="address" jdbcType="VARCHAR" />
+      <result column="adviser_type" property="adviserType"/>
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, title, picture, class_id, content, member_id, company_id, status, hits, add_time, 
+    update_time, type, attribute, keywords, market_price, real_price,weight_value,recommend
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from j_product
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from j_product
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hiveview.entity.Product" >
+    insert into j_product (id, title, picture, 
+      class_id, content, member_id, 
+      company_id, status, hits, 
+      add_time, update_time, type, 
+      attribute, keywords, market_price, 
+      real_price)
+    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR}, 
+      #{classId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, #{memberId,jdbcType=BIGINT}, 
+      #{companyId,jdbcType=BIGINT}, #{status,jdbcType=TINYINT}, #{hits,jdbcType=INTEGER}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{type,jdbcType=TINYINT}, 
+      #{attribute,jdbcType=VARCHAR}, #{keywords,jdbcType=VARCHAR}, #{marketPrice,jdbcType=DECIMAL}, 
+      #{realPrice,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hiveview.entity.Product" >
+    insert into j_product
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="picture != null" >
+        picture,
+      </if>
+      <if test="classId != null" >
+        class_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="hits != null" >
+        hits,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="attribute != null" >
+        attribute,
+      </if>
+      <if test="keywords != null" >
+        keywords,
+      </if>
+      <if test="marketPrice != null" >
+        market_price,
+      </if>
+      <if test="realPrice != null" >
+        real_price,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="picture != null" >
+        #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="classId != null" >
+        #{classId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="hits != null" >
+        #{hits,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="attribute != null" >
+        #{attribute,jdbcType=VARCHAR},
+      </if>
+      <if test="keywords != null" >
+        #{keywords,jdbcType=VARCHAR},
+      </if>
+      <if test="marketPrice != null" >
+        #{marketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="realPrice != null" >
+        #{realPrice,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hiveview.entity.Product" >
+    update j_product
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="picture != null" >
+        picture = #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="classId != null" >
+        class_id = #{classId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="hits != null" >
+        hits = #{hits,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="attribute != null" >
+        attribute = #{attribute,jdbcType=VARCHAR},
+      </if>
+      <if test="keywords != null" >
+        keywords = #{keywords,jdbcType=VARCHAR},
+      </if>
+      <if test="marketPrice != null" >
+        market_price = #{marketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="realPrice != null" >
+        real_price = #{realPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="recommend != null" >
+        recommend = #{recommend},
+      </if>
+      <if test="weightValue != null" >
+        weight_value = #{weightValue},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hiveview.entity.Product" >
+    update j_product
+    set title = #{title,jdbcType=VARCHAR},
+      picture = #{picture,jdbcType=VARCHAR},
+      class_id = #{classId,jdbcType=BIGINT},
+      content = #{content,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=BIGINT},
+      company_id = #{companyId,jdbcType=BIGINT},
+      status = #{status,jdbcType=TINYINT},
+      hits = #{hits,jdbcType=INTEGER},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      type = #{type,jdbcType=TINYINT},
+      attribute = #{attribute,jdbcType=VARCHAR},
+      keywords = #{keywords,jdbcType=VARCHAR},
+      market_price = #{marketPrice,jdbcType=DECIMAL},
+      real_price = #{realPrice,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <select id="getProductPage" resultMap="BaseResultMap" parameterType="com.hiveview.entity.Product" >
+        SELECT
+          p.id,
+          p.title,
+          p.picture,
+          p.class_id,
+          p.content,
+          p.member_id,
+          p.company_id,
+          p.status,
+          p.hits,
+          p.add_time,
+          p.update_time,
+          p.type,
+          p.attribute,
+          p.keywords,
+          p.market_price,
+          p.real_price,
+          c.name as className
+        FROM j_product p LEFT JOIN j_class c ON p.class_id = c.id
+        <if test="recommendShow == true" >
+          LEFT JOIN  j_product_recommend jr on jr.product_id = p.id
+        </if>
+        <where>
+          <if test="title != null" >
+            p.title like  CONCAT('%',#{title,jdbcType=BIGINT},'%')
+          </if>
+          <if test="memberId != null" >
+          AND p.member_id = #{memberId,jdbcType=BIGINT}
+          </if>
+          <if test="status != null" >
+           AND p.status = #{status,jdbcType=TINYINT}
+          </if>
+          <if test="recommendShow == true" >
+            AND jr.id is null
+          </if>
+          and p.status != 2
+        </where>
+        order by add_time desc
+    </select>
+    <select id="getOpendProduct" resultMap="BaseResultMap" parameterType="com.hiveview.entity.Product" >
+        SELECT
+          p.id,
+          p.title,
+          p.picture,
+          p.class_id,
+          p.content,
+          p.member_id,
+          p.company_id,
+          p.status,
+          p.hits,
+          p.add_time,
+          p.update_time,
+          p.type,
+          p.attribute,
+          p.keywords,
+          p.market_price,
+          p.real_price,
+          c.name as className,
+          m.name as memberName,
+          m.head_portrait,
+          m.description,
+          m.adviser_type
+        FROM j_product p LEFT JOIN j_class c ON p.class_id = c.id
+                         LEFT JOIN  j_member m on p.member_id = m.id
+                         LEFT JOIN j_area a on a.code = m.area_code
+          <where>
+            <if test="memberId != null" >
+              p.member_id = #{memberId,jdbcType=BIGINT}
+            </if>
+            <if test="status != null" >
+              AND  p.status = #{status,jdbcType=TINYINT}
+            </if>
+            <if test="title != null and title != ''" >
+              AND  p.title like CONCAT('%',#{title},'%')
+            </if>
+            <if test="id != null and id != ''" >
+              AND  p.id =  #{id}
+            </if>
+            <if test="areaCode != null and areaCode != ''" >
+              AND  m.area_code like  CONCAT(#{areaCode},'%')
+            </if>
+            <if test="classCode != null and classCode != ''" >
+              AND  c.code  like  CONCAT(#{classCode},'%')
+            </if>
+          </where>
+      order by 	p.weight_value DESC,p.recommend DESC
+
+    </select>
+</mapper>

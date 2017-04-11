@@ -1,0 +1,95 @@
+#hyalineDiv{
+position:absolute; z-index:999; filter: Alpha(Opacity=50); opacity:0.45; background:black; left:0px; top:0px;
+}
+.dialogSearch(){
+	text-align: left;
+}
+.modelDiv {
+    border: 1px solid #999999;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 0 5px #535658;
+    position: absolute;
+    z-index: 1000;
+    display: none;
+}
+.modelDivTitle {
+    background: none repeat scroll 0 0 #F3F3F3;
+    border-bottom: 1px solid #E5E5E5;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    cursor: move;
+    height: 31px;
+    padding-bottom: 2px;
+    padding-left: 5px;
+    padding-top: 2px;
+}
+.modelDivTitle h3 {
+    color: #000;
+    float: left;
+    font-size: 14px;
+    font-weight: bold;
+    height: 31px;
+    line-height: 31px;
+    margin: 0;
+    overflow: hidden;
+    padding-left: 10px;
+    text-shadow: 0 1px 1px #FFFFFF;
+}
+.qz_dialog_btn_close {
+    background-color: transparent;
+    background-image:url(../../../images/sprite.png);
+    background-position: 10px 11px;
+    background-repeat: no-repeat;
+    border: 0 none;
+    cursor: pointer;
+    float: right;
+    font-size: 0;
+    height: 28px;
+    line-height: 100px;
+    position: relative;
+    width: 30px;
+}
+.none {
+    display: none !important;
+}
+.modelDivContent {
+    background: none repeat scroll 0 0 #FFFFFF;
+    margin: 0;
+    max-height: 550px;
+    overflow: auto;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    padding-left:8px;
+    padding-right:8px;
+    text-align: center;
+}
+.modelDivContent ul {
+    margin: 0;
+    padding-left: 20px;
+}
+.modelDivContent ul li {
+    list-style: none outside none;
+    padding-top: 5px;
+}
+.modelDivBottom {
+    background: none repeat scroll 0 0 #F3F3F3;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    clear: both;
+    height: 36px;
+    padding: 6px 6px 0 0;
+    text-align: right;
+}
+.album_title_model {
+    height: 25px;
+    padding: 0 2px;
+    width: 252px;
+}
+.album_describe {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #C8C8C8;
+    height: 52px;
+    overflow: auto;
+    padding: 3px 2px;
+    width: 252px;
+}

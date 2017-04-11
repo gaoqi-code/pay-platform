@@ -1,0 +1,85 @@
+.topDiv{
+	height:120px;
+	background-image:url("../../images/top/topBackground.png");
+	min-width:1090px;
+	margin-left:auto;
+	margin-right:auto;
+	margin-bottom:1px;
+}
+.logoTitle{
+	font-size:26px;
+	font-weight:bold;
+	color:#FFFFFF;
+	float:left;
+	line-height:118px;
+	margin-left: 10px;
+	background-image: url("../../images/top/logo.png");
+	background-repeat: no-repeat;
+	background-position-y: 20px;
+}
+.navigation{
+	height:50px;
+	margin-top:69px;
+}
+.navigation ul{
+	padding:0px;
+	margin:0px;
+}
+.navigation ul li{
+	height:50px;
+	float:left;
+	list-style:none;
+	font-size:16px;
+	color:#36465F;
+	width:135px;
+	height:49px;
+	line-height:49px;
+	text-align:center;
+}
+
+.navigation ul li a{
+	float:left;
+	list-style:none;
+	display:block;
+	text-decoration:none;
+	width:100%;
+	background-color:#36465F;
+	color:#FFFFFF;
+	font-weight:bold;
+}
+
+.navigation .nav_active{
+	background-color:#FFF;
+	color:#36465F;
+	/*border-bottom:1px solid #FFFF00;*/
+	text-align: center;
+	/*-webkit-border-radius: 8px;*/
+	/*-moz-border-radius: 8px;*/
+	/*border-radius: 8px;*/
+	-webkit-box-shadow: #666 0px 0px 10px;
+	-moz-box-shadow: #666 0px 0px 10px;
+	/*box-shadow: #666 0px 0px 10px;*/
+	behavior: url(/PIE.htc);
+}
+
+.navigation ul li a:hover{
+	background-color:#FFF;
+	color:#36465F;
+	border-bottom:1px solid #FFFFFF;
+	text-align: center;
+	/*-webkit-border-radius: 8px;*/
+	-webkit-box-shadow: #666 0px 0px 10px;
+	-moz-box-shadow: #666 0px 0px 10px;
+	box-shadow: #666 0px 0px 10px;behavior: url(/PIE.htc);
+}
+
+/****** exit login *****/
+#exitLogin{
+	display: block;float:right; color:#0EC7CE; font-size:12px; margin-right: 20px;margin-top: 13px; cursor: pointer;
+}
+#exitLogin a{
+	color:#FFFFFF;
+}
+#exitLogin a:hover{
+	color:#FF0000;
+}

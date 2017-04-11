@@ -1,0 +1,55 @@
+/** 针对表头与表身分开时，出现在滚动条 **/
+.tableDiv{
+/* 	height:354px; */
+	overflow: auto;
+}
+
+/*** 用在弹出框时的表头与表身分开  start ****/
+.tableDiv2{
+	height:282px;
+	overflow: auto;
+}
+.x-table{
+	border-collapse: collapse;
+    border: 1px solid #DDDDDD;
+	background-color:#FFF;
+	width:100%;
+}
+
+.x-table th{
+  	border: 1px solid #DDDDDD;
+    line-height: 30px;
+    padding: 2px 2px;
+    text-align: left;
+    background-color: #F8F8F8;
+/*     vertical-align: top; */
+	text-align:center;
+}
+.x-table-header{
+ 	margin-bottom: -1px;
+    position: relative;
+    z-index: 100;
+}
+
+.x-table td{
+  	border: 1px solid #DDDDDD;
+    line-height: 30px;
+    padding: 2px 2px;
+    text-align: left;
+    vertical-align: middle;
+	text-align:center;
+}
+
+.tdIndxId{
+	width:25px;
+}
+.stateClassForZero{
+	color:red;
+}
+.stateClassForOne{
+	color:#00FF00;
+}
+.loading{
+	width:300px;
+	height:300px;
+}
