@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 public class DateUtil {
 
@@ -67,5 +68,16 @@ public class DateUtil {
 		}
 	    margin = margin/(1000*60*60*24);
 	    return margin;
+	}
+
+	public static String getOrderNum() {
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+		return df.format(date);
+	}
+
+	public static String getThree() {
+		Random rad = new Random();
+		return String.valueOf(rad.nextInt(1000));
 	}
 }

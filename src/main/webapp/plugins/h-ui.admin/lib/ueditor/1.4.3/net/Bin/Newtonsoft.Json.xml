@@ -2171,15 +2171,15 @@
         </member>
         <member name="M:Newtonsoft.Json.Linq.JToken.AfterSelf">
             <summary>
-            Returns a collection of the sibling tokens after this token, in document order.
+            Returns a collection of the sibling tokens after this token, in document orderInfo.
             </summary>
-            <returns>A collection of the sibling tokens after this tokens, in document order.</returns>
+            <returns>A collection of the sibling tokens after this tokens, in document orderInfo.</returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.JToken.BeforeSelf">
             <summary>
-            Returns a collection of the sibling tokens before this token, in document order.
+            Returns a collection of the sibling tokens before this token, in document orderInfo.
             </summary>
-            <returns>A collection of the sibling tokens before this token, in document order.</returns>
+            <returns>A collection of the sibling tokens before this token, in document orderInfo.</returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.JToken.Value``1(System.Object)">
             <summary>
@@ -2191,23 +2191,23 @@
         </member>
         <member name="M:Newtonsoft.Json.Linq.JToken.Children">
             <summary>
-            Returns a collection of the child tokens of this token, in document order.
+            Returns a collection of the child tokens of this token, in document orderInfo.
             </summary>
-            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> containing the child tokens of this <see cref="T:Newtonsoft.Json.Linq.JToken"/>, in document order.</returns>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> containing the child tokens of this <see cref="T:Newtonsoft.Json.Linq.JToken"/>, in document orderInfo.</returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.JToken.Children``1">
             <summary>
-            Returns a collection of the child tokens of this token, in document order, filtered by the specified type.
+            Returns a collection of the child tokens of this token, in document orderInfo, filtered by the specified type.
             </summary>
             <typeparam name="T">The type to filter the child tokens on.</typeparam>
-            <returns>A <see cref="T:Newtonsoft.Json.Linq.JEnumerable`1"/> containing the child tokens of this <see cref="T:Newtonsoft.Json.Linq.JToken"/>, in document order.</returns>
+            <returns>A <see cref="T:Newtonsoft.Json.Linq.JEnumerable`1"/> containing the child tokens of this <see cref="T:Newtonsoft.Json.Linq.JToken"/>, in document orderInfo.</returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.JToken.Values``1">
             <summary>
-            Returns a collection of the child values of this token, in document order.
+            Returns a collection of the child values of this token, in document orderInfo.
             </summary>
             <typeparam name="T">The type to convert the values to.</typeparam>
-            <returns>A <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing the child values of this <see cref="T:Newtonsoft.Json.Linq.JToken"/>, in document order.</returns>
+            <returns>A <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing the child values of this <see cref="T:Newtonsoft.Json.Linq.JToken"/>, in document orderInfo.</returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.JToken.Remove">
             <summary>
@@ -3143,11 +3143,11 @@
         </member>
         <member name="M:Newtonsoft.Json.Linq.JValue.CompareTo(Newtonsoft.Json.Linq.JValue)">
             <summary>
-            Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
+            Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort orderInfo as the other object.
             </summary>
             <param name="obj">An object to compare with this instance.</param>
             <returns>
-            A 32-bit signed integer that indicates the relative order of the objects being compared. The return value has these meanings:
+            A 32-bit signed integer that indicates the relative orderInfo of the objects being compared. The return value has these meanings:
             Value
             Meaning
             Less than zero
@@ -4217,9 +4217,9 @@
         </member>
         <member name="P:Newtonsoft.Json.JsonPropertyAttribute.Order">
             <summary>
-            Gets or sets the order of serialization and deserialization of a member.
+            Gets or sets the orderInfo of serialization and deserialization of a member.
             </summary>
-            <value>The numeric order of serialization or deserialization.</value>
+            <value>The numeric orderInfo of serialization or deserialization.</value>
         </member>
         <member name="P:Newtonsoft.Json.JsonPropertyAttribute.Required">
             <summary>
@@ -5717,24 +5717,24 @@
         </member>
         <member name="M:Newtonsoft.Json.Linq.JContainer.Children">
             <summary>
-            Returns a collection of the child tokens of this token, in document order.
+            Returns a collection of the child tokens of this token, in document orderInfo.
             </summary>
             <returns>
-            An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> containing the child tokens of this <see cref="T:Newtonsoft.Json.Linq.JToken"/>, in document order.
+            An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> containing the child tokens of this <see cref="T:Newtonsoft.Json.Linq.JToken"/>, in document orderInfo.
             </returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.JContainer.Values``1">
             <summary>
-            Returns a collection of the child values of this token, in document order.
+            Returns a collection of the child values of this token, in document orderInfo.
             </summary>
             <typeparam name="T">The type to convert the values to.</typeparam>
             <returns>
-            A <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing the child values of this <see cref="T:Newtonsoft.Json.Linq.JToken"/>, in document order.
+            A <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing the child values of this <see cref="T:Newtonsoft.Json.Linq.JToken"/>, in document orderInfo.
             </returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.JContainer.Descendants">
             <summary>
-            Returns a collection of the descendant tokens for this token in document order.
+            Returns a collection of the descendant tokens for this token in document orderInfo.
             </summary>
             <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing the descendant tokens of the <see cref="T:Newtonsoft.Json.Linq.JToken"/>.</returns>
         </member>
@@ -7404,9 +7404,9 @@
         </member>
         <member name="P:Newtonsoft.Json.Serialization.JsonProperty.Order">
             <summary>
-            Gets or sets the order of serialization and deserialization of a member.
+            Gets or sets the orderInfo of serialization and deserialization of a member.
             </summary>
-            <value>The numeric order of serialization or deserialization.</value>
+            <value>The numeric orderInfo of serialization or deserialization.</value>
         </member>
         <member name="P:Newtonsoft.Json.Serialization.JsonProperty.UnderlyingName">
             <summary>

@@ -7,86 +7,78 @@ public class Constants {
 	/**
 	 * 上传文件总目录
 	 */
-	public static String UPLOAD = "upload"; 
-	
+	public static String UPLOAD = "upload";
+
 	/**
 	 * apk上传目录
 	 */
 	public static String APK="tvapk";
-	
+
 	/**
 	 * 二维码生成目录
 	 */
 	public static String MATRIX_OUT_PATH_KEY = "BitMatrixPath";
-	
+
 	/**
 	 * LOGO 图标位置
 	 */
 	public static String MATRIX_LOGO_URL = "douban_img";
-	
+
 	/**
 	 * LOGO 大小 默认为图片的1/5
 	 */
 	public static int MATRIX_LOGO_SIZE = 5;
-	
+
 	/**
 	 * 二维码图片高
 	 */
 	public static int MATRIX_HEIGHT = 212;
-	
+
 	/**
 	 * 二维码图片宽
 	 */
 	public static int MATRIX_WIDTH = 212;
-	
+
 	/**
 	 * 二维码图片格式
 	 */
 	public static String MATRIX_IMG_SUFFIX = "jpg";
-	
+
 	/**
-	 * 豆瓣搜索电影请求
+	 * 支付请求接口名
 	 */
-	public static String DB_MOVE_SEARCH_URL = "http://api.douban.com/v2/movie/search?q={0}&start={1}&count={2}";
-	///////////////// huan wang start /////////////////
-	
-	public static String cpKey_huan = "";
-	public static String uri_huan = "http://www.5i.test.cedock.net/inject/json";
-	public static int pageSize_huan = 10;
-	
-	///////////////// huan wang end ///////////////////
-	
+	public static String INTERFACE_NAME_PAY = "anonymousPayOrder";
+
 	/**
-	 * 数据统计接口参数
-	 * @author sunquan
-	 *
+	 * 获取付款银行接口名
 	 */
-	public static class DATA_COLLECT{
-		/**
-		 * 统计接口URL
-		 */
-		public static String DATA_COLLECT_URL = "data.domybox.com/data_collect/stat/deviceManage.json";
-		/**
-		 * 新增分配设备
-		 */
-		public static Integer DEVICE_ADD = 101;
-		/**
-		 * 生产商，
-		 */
-		public static Integer CP_ADD = 201;
-		public static Integer CP_UPATE = 203;
-		public static Integer CP_DELETE = 202;
-		/**
-		 * 渠道
-		 */
-		public static Integer CPCHANNEL_ADD = 301;
-		public static Integer CPCHANNEL_UPATE = 303;
-		public static Integer CPCHANNEL_DELETE = 302;
-		/**
-		 * 硬件型号
-		 */
-		public static Integer HARDWARE_ADD = 401;
-		public static Integer HARDWARE_UPATE = 403;
-		public static Integer HARDWARE_DELETE = 402;
-	}
+	public static String INTERFACE_NAME_GETBANKS = "getBanksForPay";
+
+	/**
+	 * 单笔订单查询接口名
+	 */
+	public static String INTERFACE_NAME_QUERYORDER = "QueryOrder";
+
+	/**
+	 * 退款接口名
+	 */
+	public static String INTERFACE_NAME_REFUNDORDER = "RefundOrder";
+
+	/**
+	 * 退款订单查询接口名
+	 */
+	public static String INTERFACE_NAME_QUERYREFUNDORDER = "QueryRefundOrder";
+
+	/**
+	 * 甬易支付平台返回码—未支付
+	 */
+	public static String YOYI_TRANSTATE_NOPAY ="0";
+	/**
+	 * 甬易支付平台返回码—已支付
+	 */
+	public static String YOYI_TRANSTATE_HASPAY ="1";
+	/**
+	 * 甬易支付平台返回码—支付失败
+	 */
+	public static String YOYI_TRANSTATE_PAYFAIL ="2";
 }

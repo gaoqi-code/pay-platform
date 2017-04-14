@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <!--配置文件-->
+    <properties resource="config.properties" />
+
+     <!--必须配置驱动包的路径 -->
+    <classPathEntry location="G:\repository\mysql\mysql-connector-java\5.0.8\mysql-connector-java-5.0.8.jar" />
+
+    <context id="Mysql" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
+        <jdbcConnection driverClass="${driverClassName}"
+                        connectionURL="${jdbc_url}" userId="${jdbc_username}"
+                        password="${jdbc_password}" />
+
+        <!-- 指定生成pojo的包和此包在项目中的地址； -->
+        <javaModelGenerator targetPackage="com.hiveview.entity"
+                            targetProject="G:\ideaSpace\pay-platform\src\main\java" />
+
+        <!-- 指定生成pojo的映射xml文件的所在包和此包在项目中的地址 -->
+        <sqlMapGenerator targetPackage="com.hiveview.mapper"
+                         targetProject="G:\ideaSpace\pay-platform\src\main\java" />
+
+        <!-- 指定生成访问映射xml文件的接口所在包和此包在项目中的地址； -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.hiveview.dao"
+                             targetProject="G:\ideaSpace\pay-platform\src\main\java">
+        </javaClientGenerator>
+
+        <!-- 配置表名跟pojo名  该table节点可以多个 -->
+        <table schema="project" tableName="h_user" domainObjectName="User" enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="fawaslse">
+            <!--<property name="useActualColumnNames" value="false" />-->
+            <!--<columnOverride column="create_time" property="createTime" />-->
+            <!--<columnOverride column="float_test" property="floatTest" />-->
+            <!--<columnOverride column="double_test" property="doubleTest" />-->
+            <!--<columnOverride column="text_test" property="textTest" />-->
+        </table>
+    </context>
+
+
+
+    <!--mac!!!!!!-->
+    <!-- 必须配置驱动包的路径 -->
+    <!--<classPathEntry location="/Users/blydvi/IdeaProjects/ideaSpacee/qibaba-admin/target/qibaba-admin-2.0/WEB-INF/lib/mysql-connector-java-5.0.8.jar" />-->
+
+    <!--<context id="Mysql" targetRuntime="MyBatis3">-->
+        <!--<commentGenerator>-->
+            <!--&lt;!&ndash; 是否去除自动生成的注释 true：是 ： false:否 &ndash;&gt;-->
+            <!--<property name="suppressAllComments" value="true" />-->
+        <!--</commentGenerator>-->
+
+        <!--<jdbcConnection driverClass="${driverClassName}"-->
+                        <!--connectionURL="${jdbc_url}" userId="${jdbc_username}"-->
+                        <!--password="${jdbc_password}" />-->
+
+        <!--&lt;!&ndash; 指定生成pojo的包和此包在项目中的地址； &ndash;&gt;-->
+        <!--<javaModelGenerator targetPackage="com.hiveview.entity"-->
+                            <!--targetProject="/Users/blydvi/IdeaProjects/ideaSpacee/qibaba-service/src/main/java" />-->
+
+        <!--&lt;!&ndash; 指定生成pojo的映射xml文件的所在包和此包在项目中的地址 &ndash;&gt;-->
+        <!--<sqlMapGenerator targetPackage="com.hiveview.mapper"-->
+                         <!--targetProject="/Users/blydvi/IdeaProjects/ideaSpacee/qibaba-service/src/main/java" />-->
+
+        <!--&lt;!&ndash; 指定生成访问映射xml文件的接口所在包和此包在项目中的地址； &ndash;&gt;-->
+        <!--<javaClientGenerator type="XMLMAPPER"-->
+                             <!--targetPackage="com.hiveview.dao"-->
+                             <!--targetProject="/Users/blydvi/IdeaProjects/ideaSpacee/qibaba-service/src/main/java">-->
+        <!--</javaClientGenerator>-->
+
+        <!--&lt;!&ndash; 配置表名跟pojo名  该table节点可以多个 &ndash;&gt;-->
+        <!--<table schema="project" tableName="j_member_recommend" domainObjectName="MemberRecommend" enableCountByExample="false" enableUpdateByExample="false"-->
+               <!--enableDeleteByExample="false" enableSelectByExample="false"-->
+               <!--selectByExampleQueryId="fawaslse">-->
+            <!--&lt;!&ndash;<property name="useActualColumnNames" value="false" />&ndash;&gt;-->
+            <!--&lt;!&ndash;<columnOverride column="create_time" property="createTime" />&ndash;&gt;-->
+            <!--&lt;!&ndash;<columnOverride column="float_test" property="floatTest" />&ndash;&gt;-->
+            <!--&lt;!&ndash;<columnOverride column="double_test" property="doubleTest" />&ndash;&gt;-->
+            <!--&lt;!&ndash;<columnOverride column="text_test" property="textTest" />&ndash;&gt;-->
+        <!--</table>-->
+    <!--</context>-->
+</generatorConfiguration>

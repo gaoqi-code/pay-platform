@@ -276,7 +276,7 @@
           </if>
           and p.status != 2
         </where>
-        order by add_time desc
+        orderInfo by add_time desc
     </select>
     <select id="getOpendProduct" resultMap="BaseResultMap" parameterType="com.hiveview.entity.Product" >
         SELECT
@@ -324,7 +324,7 @@
               AND  c.code  like  CONCAT(#{classCode},'%')
             </if>
           </where>
-      order by 	p.weight_value DESC,p.recommend DESC
+      orderInfo by 	p.weight_value DESC,p.recommend DESC
 
     </select>
 </mapper>

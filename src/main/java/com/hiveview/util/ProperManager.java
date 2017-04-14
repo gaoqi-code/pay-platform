@@ -21,6 +21,19 @@ public class ProperManager {
 	}
 	
 	/**
+	 * 读取默认的config.properties文件
+	 * @param key
+	 * @return value
+	 */
+	public static Object getObject(String key) {
+		try {
+			return RESOURCE_BUNDLE.getObject(key);
+		} catch (MissingResourceException e) {
+			throw new RuntimeException( "! config : "+ key + '!');
+		}
+	}
+
+	/**
 	 * 读取指定的.properties文件
 	 * @param key
 	 * @return
