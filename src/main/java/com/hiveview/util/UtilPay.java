@@ -26,14 +26,19 @@ public class UtilPay {
 	public static String sign_type = "MD5";
 	
 	/**
-	 * resolvePara:(验证银联支付请求是否合法).
+	 * resolvePara:(验证签名).
 	 * @author zhangsw
 	 * @return
 	 */
-	public static boolean resolvePara(String userId,String sign){
-		String signMsg = DigestUtil.hmacSign(userId, YoiPayUtil.key);
+	public static boolean resolvePara(HttpServletRequest request,String key){
+		//获取参数集合
+		Map<?,?> requestParams = request.getParameterMap();
+		//转换格式
+		Map<String,String> params = UtilPay.payReturnParamsFormat(requestParams,null);
+		//获取用户传输加密
+		String sign = params.remove("sign");
 		//判断加密是否合法
-		return sign.equals(signMsg);
+		return sign.equals(UtilPay.assemblySign(params, key));
 	}
 	
 	/**
@@ -91,23 +96,43 @@ public class UtilPay {
 			throw new RuntimeException("MD5签名过程中出现错�?指定的编码集不对,您目前指定的编码集是:"+ charset);
 		}
 	}
-	
+
+	/**
+	 * 除去数组中的空值和签名参数
+	 * @param sArray 签名参数数组
+	 * @return 去掉空格与签名参数后的新签名参数数组
+	 */
+	public static Map<String, String> paraFilter(Map<String, String> sArray) {
+		Map<String, String> result = new HashMap<String, String>();
+		if (sArray == null || sArray.size() <= 0) {
+			return result;
+		}
+		for (String key : sArray.keySet()) {
+			String value = sArray.get(key);
+			if (value == null || value.equals("") || key.equalsIgnoreCase("sign")
+					|| key.equalsIgnoreCase("sign_type")) {
+				continue;
+			}
+			result.put(key, value);
+		}
+		return result;
+	}
+
     /**
      * 生成要请求给支付宝的参数数组
      * @param sParaTemp 请求前的参数数组
      * @return 要请求的参数数组
      */
 	public static Map<String, String> buildRequestPara(Map<String, String> sParaTemp,String key) {
-        Map<String, String> sPara = paraFilter(sParaTemp);
-        String mysign = assemblySign(sPara,key);
-        sPara.put("sign", mysign);
-        return sPara;
+		Map<String, String> sPara = paraFilter(sParaTemp);
+		String mysign = assemblySign(sPara,key);
+		sPara.put("sign", mysign);
+		return sPara;
     }
-	
 	/**
-	 * assemblySign:(对用户提交参数进行加�?.
-	 * @author LiuJiangTao
-	 * @param map 参数�?
+	 * assemblySign:(对用户id进行加加密
+	 * @author zhangsw
+	 * @param map 参数
 	 * @return
 	 */
 	public static String assemblySign(Map<String, String> map,String key) {
@@ -123,7 +148,7 @@ public class UtilPay {
 		}
 		return sign(parms.toString(),key);
 	}
-	
+
     /**
      * 建立请求，以表单HTML形式构�?（默认）
      * @param sParaTemp 请求参数数组
@@ -162,28 +187,7 @@ public class UtilPay {
 		String strResult = EntityUtils.toString(result.getHttpEntity(),input_charset);
         return strResult;
     }
-	
-    /** 
-     * 除去数组中的空值和签名参数
-     * @param sArray 签名参数数组
-     * @return 去掉空格与签名参数后的新签名参数数组
-     */
-    public static Map<String, String> paraFilter(Map<String, String> sArray) {
-        Map<String, String> result = new HashMap<String, String>();
-        if (sArray == null || sArray.size() <= 0) {
-            return result;
-        }
-        for (String key : sArray.keySet()) {
-            String value = sArray.get(key);
-            if (value == null || value.equals("") || key.equalsIgnoreCase("sign")
-                || key.equalsIgnoreCase("sign_type")) {
-                continue;
-            }
-            result.put(key, value);
-        }
-        return result;
-    }
-    
+
     /**
      * payReturnParamsFormat:(获取指定格式返回参数).
      * @author LiuJiangTao

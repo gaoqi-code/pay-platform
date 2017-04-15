@@ -9,5 +9,5 @@ import java.math.BigDecimal;
  * @create 2017-04-14 17:52
  */
 public interface UserService {
-    public int updateBalance(long userId, BigDecimal orderAmt);
+    public int updateBalance(long userId, BigDecimal orderAmt,String orderNo);
 }

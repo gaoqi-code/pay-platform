@@ -1,5 +1,6 @@
 package com.hiveview.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class UserBalanceDetail {
@@ -7,19 +8,19 @@ public class UserBalanceDetail {
 
     private Integer userId;
 
-    private Byte detailType;
+    private int detailType;
 
-    private Long amount;
+    private BigDecimal amount;
 
-    private Long nowBalance;
+    private BigDecimal nowBalance;
 
-    private Long lastBalance;
+    private BigDecimal lastBalance;
 
     private Date addTime;
 
     private String orderNo;
 
-    private Byte balofpay;
+    private int balofpay;
 
     public Integer getId() {
         return id;
@@ -37,35 +38,35 @@ public class UserBalanceDetail {
         this.userId = userId;
     }
 
-    public Byte getDetailType() {
+    public int getDetailType() {
         return detailType;
     }
 
-    public void setDetailType(Byte detailType) {
+    public void setDetailType(int detailType) {
         this.detailType = detailType;
     }
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public Long getNowBalance() {
+    public BigDecimal getNowBalance() {
         return nowBalance;
     }
 
-    public void setNowBalance(Long nowBalance) {
+    public void setNowBalance(BigDecimal nowBalance) {
         this.nowBalance = nowBalance;
     }
 
-    public Long getLastBalance() {
+    public BigDecimal getLastBalance() {
         return lastBalance;
     }
 
-    public void setLastBalance(Long lastBalance) {
+    public void setLastBalance(BigDecimal lastBalance) {
         this.lastBalance = lastBalance;
     }
 
@@ -85,11 +86,11 @@ public class UserBalanceDetail {
         this.orderNo = orderNo;
     }
 
-    public Byte getBalofpay() {
+    public int getBalofpay() {
         return balofpay;
     }
 
-    public void setBalofpay(Byte balofpay) {
+    public void setBalofpay(int balofpay) {
         this.balofpay = balofpay;
     }
 }

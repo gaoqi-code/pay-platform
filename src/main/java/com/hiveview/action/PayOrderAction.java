@@ -1,5 +1,6 @@
 package com.hiveview.action;
 
+import com.google.common.collect.Maps;
 import com.hiveview.common.Constants;
 import com.hiveview.common.pay.CertTools;
 import com.hiveview.common.pay.ProcessMessage;
@@ -7,7 +8,9 @@ import com.hiveview.common.pay.YoiPayConfig;
 import com.hiveview.common.pay.YoiPaySubmit;
 import com.hiveview.entity.OrderInfo;
 import com.hiveview.entity.OrderVo;
+import com.hiveview.entity.UserBalanceDetail;
 import com.hiveview.service.OrderInfoService;
+import com.hiveview.service.UserBalanceDetailService;
 import com.hiveview.service.UserService;
 import com.hiveview.util.*;
 import com.hiveview.util.log.LogMgr;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -30,7 +34,8 @@ public class PayOrderAction {
 	private OrderInfoService orderInfoService;
 	@Autowired
 	private UserService userService;
-
+	@Autowired
+	private UserBalanceDetailService userBalanceDetailService;
 	/**
 	 * payFiter:(用户过滤和分发支付请求).
 	 * @param request
@@ -40,20 +45,19 @@ public class PayOrderAction {
 	 */
 	@RequestMapping(value="payOrder", method = RequestMethod.POST)
 	public ModelAndView pay(HttpServletRequest request,ModelAndView mav,OrderVo orderVo) {
-		Map<?, ?> map = request.getParameterMap();
-		// 组装请求参数
-		Map<String, String> sPra = UtilPay.payReturnParamsFormat(map, null);
 
-		String userId=sPra.remove("userId");
-		String sign=sPra.remove("sign");
 		// 验证请求是否合法
 		LogMgr.writeSysInfoLog("开始验证请求是否合法>>>>>>>>>>>>>>>>>>>>>>");
-		if (!UtilPay.resolvePara(userId,sign)) {
+		if (!UtilPay.resolvePara(request,YoiPayUtil.key)) {
 			LogMgr.writeSysInfoLog("验证失败>>>>>>>>>>>>>>>>>>>>>>");
 			mav.getModel().put("result", "请求非法！");
 			mav.setViewName("notify_url");
 			return mav;
 		}
+
+		Map<?, ?> map = request.getParameterMap();
+		// 组装请求参数
+		Map<String, String> sPra = UtilPay.payReturnParamsFormat(map, null);
 
 		//判断参数是否缺少参数
 		LogMgr.writeSysInfoLog("开始验证参数是否为空>>>>>>>>>>>>>>>>>>>>>>");
@@ -160,6 +164,10 @@ public class PayOrderAction {
 		//获取甬易支付POST过来反馈信息
 		Map<String, String> params = UtilPay.getpayReturnParamsForVerify(request);
 		LogMgr.writeSysInfoLog("params>>>>>>>>>>>>>>>>>>>>>>" + params.toString());
+
+		String tranSerialNo="";
+		String orderNo="";
+		String redirectUrl="";
 		try {
 			if(null!=params){
 				//通知结果数据
@@ -176,20 +184,23 @@ public class PayOrderAction {
 
 				if(!sign){
 					mav.getModel().put("result", "结果验签失败！");
+					mav.setViewName("pay/notify_url");
+					return mav;
 				}else {
 					Map<String, String>  mapValues= XmlUtil.getResult(xmlString);
-					String tranSerialNo=mapValues.get("tranSerialNo");//甬易支付平台交易号
-					String orderNo=mapValues.get("orderNo");//原商户订单号
+					 tranSerialNo=mapValues.get("tranSerialNo");//甬易支付平台交易号
+					 orderNo=mapValues.get("orderNo");//原商户订单号
 					// 根据返回订单号获取订单详情
 					OrderInfo order=orderInfoService.getOrderInfoByOrderNo(orderNo);
 					// 如果订单不存在为空，则返回到异常页。
 					if (order == null) {
 						LogMgr.writeSysInfoLog(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>订单不存在");
+						mav.getModel().put("result", "订单不存在！");
 						mav.setViewName("pay/notify_url");
 						return mav;
 					}
 					//支付回调地址
-					String redirectUrl = order.getNotifyUrl();
+					 redirectUrl = order.getNotifyUrl();
 					BigDecimal orderAmt=BigDecimal.valueOf(Double.valueOf(mapValues.get("orderAmt")));
 					String tranStat=mapValues.get("tranStat");
 					//支付成功
@@ -201,23 +212,27 @@ public class PayOrderAction {
 							order.setTradeNo(tranSerialNo);
 							orderInfoService.updateOrderInfo(order);
 							//更新用户余额
-							userService.updateBalance();
+							userService.updateBalance(order.getUserId(),orderAmt,orderNo);
 						}
-					}else{
 
 					}
-					mav.getModel().put("result", xmlString);
 				}
 
 			}else {
 				mav.getModel().put("result", "结果为空！");
-
+				mav.setViewName("pay/notify_url");
+				return mav;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mav.setViewName("pay/notify_url");
-		return mav;
+
+		//回调链接
+		Map<String, String> newHashMap = Maps.newHashMap();
+		newHashMap.put("orderNo", orderNo);
+		newHashMap.put("tradNo",tranSerialNo );
+		newHashMap = UtilPay.assemblyCallBackPara(newHashMap,YoiPayUtil.key);
+		return new ModelAndView(new RedirectView(redirectUrl), newHashMap);
 	}
 
 
@@ -233,9 +248,12 @@ public class PayOrderAction {
 		//获取甬易支付POST过来反馈信息
 		Map<String, String> params = UtilPay.getpayReturnParamsForVerify(request);
 		LogMgr.writeSysInfoLog("params>>>>>>>>>>>>>>>>>>>>>>" + params.toString());
+
+		String tranSerialNo="";
+		String orderNo="";
+		String redirectUrl="";
 		try {
 			if(null!=params){
-
 				//通知结果数据
 				String tranData=params.get("tranData");//Base64编码
 				String xmlString=new String(ProcessMessage.Base64Decode(tranData),"GBK");
@@ -247,15 +265,47 @@ public class PayOrderAction {
 				if(null!=signData){
 					sign=CertTools.verifyMessage(signData,xmlString,YoiPayConfig.INPUT_CHARSET_GBK);
 				}
-
-				if(sign){
-					mav.getModel().put("result", xmlString);
-				}else {
+				if(!sign){
 					mav.getModel().put("result", "结果验签失败！");
+				}else {
+					Map<String, String>  mapValues= XmlUtil.getResult(xmlString);
+					tranSerialNo=mapValues.get("tranSerialNo");//甬易支付平台交易号
+					orderNo=mapValues.get("orderNo");//原商户订单号
+					// 根据返回订单号获取订单详情
+					OrderInfo order=orderInfoService.getOrderInfoByOrderNo(orderNo);
+					// 如果订单不存在为空，则返回到异常页。
+					if (order == null) {
+						LogMgr.writeSysInfoLog(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>订单不存在");
+						mav.getModel().put("result", "订单不存在！");
+					}
+					//支付回调地址
+					redirectUrl = order.getNotifyUrl();
+					BigDecimal orderAmt=BigDecimal.valueOf(Double.valueOf(mapValues.get("orderAmt")));
+					String tranStat=mapValues.get("tranStat");
+					//支付成功
+					if(Constants.YOYI_TRANSTATE_HASPAY.equals(tranStat)){
+						//判断是否处理过业务
+						if(String.valueOf(order.getDataStatus())!=Constants.YOYI_TRANSTATE_HASPAY){
+							//更新订单状态
+							order.setDataStatus(Integer.valueOf(tranStat));
+							order.setTradeNo(tranSerialNo);
+							orderInfoService.updateOrderInfo(order);
+							//更新用户余额
+							userService.updateBalance(order.getUserId(),orderAmt,orderNo);
+						}
+						//定义下级转发参数
+						Map<String,String> newHashMap = Maps.newHashMap();
+						newHashMap.put("orderNo",orderNo);
+						newHashMap.put("tradNo",tranSerialNo);
+						LogMgr.writeSysInfoLog("CallBack>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Start");
+						String result = UtilPay.sendPostInfo(newHashMap, redirectUrl, YoiPayUtil.key);
+						mav.getModel().put("result", result);
+						LogMgr.writeSysInfoLog("CallBack>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>End");
+					}
 				}
+
 			}else {
 				mav.getModel().put("result", "结果为空！");
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
