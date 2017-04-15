@@ -10,6 +10,7 @@ import com.hiveview.common.httpClient.Result;
 import com.hiveview.common.httpClient.SendRequest;
 import com.hiveview.common.pay.DigestUtil;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.util.EntityUtils;
 
@@ -243,5 +244,4 @@ public class UtilPay {
 		}
 		return str;
 	}
-
 }

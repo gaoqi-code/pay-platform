@@ -11,7 +11,7 @@ public class OrderInfo {
     public static final int ORDER_SATTUS_REFUNDED=300;//已退款
     public static final int ORDER_SATTUS_STATEMENT=200;//已结算
 
-    private long id;
+    private Integer id;
 
     private String productName;
 
@@ -23,7 +23,7 @@ public class OrderInfo {
 
     private Date updateTime;
 
-    private long userId;
+    private Integer userId;
 
     private String orderNo;
     private String tradeNo;
@@ -32,11 +32,11 @@ public class OrderInfo {
 
     private String returnUrl;//页面跳转同步通知页面路径
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -80,11 +80,11 @@ public class OrderInfo {
         this.updateTime = updateTime;
     }
 
-    public long getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 

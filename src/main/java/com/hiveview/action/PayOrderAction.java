@@ -47,13 +47,13 @@ public class PayOrderAction {
 	public ModelAndView pay(HttpServletRequest request,ModelAndView mav,OrderVo orderVo) {
 
 		// 验证请求是否合法
-		LogMgr.writeSysInfoLog("开始验证请求是否合法>>>>>>>>>>>>>>>>>>>>>>");
-		if (!UtilPay.resolvePara(request,YoiPayUtil.key)) {
-			LogMgr.writeSysInfoLog("验证失败>>>>>>>>>>>>>>>>>>>>>>");
-			mav.getModel().put("result", "请求非法！");
-			mav.setViewName("notify_url");
-			return mav;
-		}
+//		LogMgr.writeSysInfoLog("开始验证请求是否合法>>>>>>>>>>>>>>>>>>>>>>");
+//		if (!UtilPay.resolvePara(request,YoiPayUtil.key)) {
+//			LogMgr.writeSysInfoLog("验证失败>>>>>>>>>>>>>>>>>>>>>>");
+//			mav.getModel().put("result", "请求非法！");
+//			mav.setViewName("notify_url");
+//			return mav;
+//		}
 
 		Map<?, ?> map = request.getParameterMap();
 		// 组装请求参数
@@ -64,8 +64,10 @@ public class PayOrderAction {
 		for (Map.Entry<String, String> entry : sPra.entrySet()) {
 			if (StringUtils.isBlank(entry.getValue())) {
 				if (entry.getKey().equals("curType")
+						|| entry.getKey().equals("userId")
 						|| entry.getKey().equals("orderAmt")
-						||entry.getKey().equals("orderNo")
+						||entry.getKey().equals("notifyURL")
+						||entry.getKey().equals("returnURL")
 						||entry.getKey().equals("bankId")){
 
 					mav.getModel().put("result", entry.getKey() + "不能为空！");
@@ -82,10 +84,12 @@ public class PayOrderAction {
 		String orderNo = DateUtil.getOrderNum() + DateUtil.getThree();
 		OrderInfo orderInfo=new OrderInfo();
 		orderInfo.setOrderNo(orderNo);
-		orderInfo.setUserId(orderVo.getUserId());
+		orderInfo.setUserId(14);
 		orderInfo.setDataStatus(OrderInfo.ORDER_SATTUS_PAY);
 		orderInfo.setProductName(orderVo.getGoodsName());
 		orderInfo.setTotalFee(orderVo.getOrderAmt());
+		orderInfo.setNotifyUrl(orderVo.getNotifyURL());
+		orderInfo.setReturnUrl(orderVo.getReturnURL());
 
 		// 判断是否为重复请求，或者修改后请求
 		OrderInfo order=orderInfoService.getOrderInfoByOrderNo(orderNo);

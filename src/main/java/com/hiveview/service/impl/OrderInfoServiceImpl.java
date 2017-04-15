@@ -6,6 +6,8 @@ import com.hiveview.service.OrderInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 /**
  * ${DESCRIPTION}
  *
@@ -23,6 +25,8 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
     @Override
     public int saveOrderInfo(OrderInfo orderInfo) {
+        orderInfo.setAddTime(new Date());
+        orderInfo.setUpdateTime(new Date());
         return orderMapperDao.saveOrderInfo(orderInfo);
 
     }

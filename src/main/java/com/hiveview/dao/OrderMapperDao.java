@@ -2,10 +2,11 @@ package com.hiveview.dao;
 
 import com.hiveview.entity.OrderInfo;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface OrderMapperDao {
 
-    int insert(OrderInfo record);
 
     int saveOrderInfo(OrderInfo record);
 
@@ -13,5 +14,4 @@ public interface OrderMapperDao {
 
     int updateOrderInfo(OrderInfo record);
 
-    int updateByPrimaryKey(OrderInfo record);
 }

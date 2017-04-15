@@ -23,7 +23,7 @@
 		<property name="ignoreAcceptHeader" value="true" />
 		<!-- 在没有扩展名时的默认展现形式 --> 
 		<property name="defaultContentType" value="text/html"/> 
-		<property name="orderInfo" value="1" />
+		<property name="order" value="1" />
 		<!-- 扩展名至mimeType的映射 -->  
 		<property name="mediaTypes">
 			<map>
