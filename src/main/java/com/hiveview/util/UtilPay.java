@@ -1,18 +1,14 @@
 package com.hiveview.util;
 
-import java.io.UnsupportedEncodingException;
-import java.security.SignatureException;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.hiveview.common.httpClient.Result;
 import com.hiveview.common.httpClient.SendRequest;
-import com.hiveview.common.pay.DigestUtil;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.collections.map.HashedMap;
+import com.hiveview.common.pay.YoiPayConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.util.EntityUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 
 /**
  * UtilPay:{支付辅助类}
@@ -21,25 +17,21 @@ import org.apache.http.util.EntityUtils;
  * @version
  */
 public class UtilPay {
-	// 字符编码格式 目前支持 utf-8
-	public static String input_charset = "utf-8";
-	// 签名方式 不需修改
-	public static String sign_type = "MD5";
-	
+
 	/**
 	 * resolvePara:(验证签名).
 	 * @author zhangsw
 	 * @return
 	 */
-	public static boolean resolvePara(HttpServletRequest request,String key){
-		//获取参数集合
-		Map<?,?> requestParams = request.getParameterMap();
-		//转换格式
-		Map<String,String> params = UtilPay.payReturnParamsFormat(requestParams,null);
+	public static boolean resolvePara(Map<String,String> params,String key){
 		//获取用户传输加密
 		String sign = params.remove("sign");
+		boolean res=false;
 		//判断加密是否合法
-		return sign.equals(UtilPay.assemblySign(params, key));
+		if(null!=sign && !"".equals(sign)){
+			res=sign.equals(UtilPay.assemblySign(YoiPayConfig.INPUT_CHARSET_UTF_8,params, key));
+		}
+		return res;
 	}
 	
 	/**
@@ -51,51 +43,6 @@ public class UtilPay {
 	public static Map<String,String> assemblyCallBackPara(Map<String,String> sPara,String key){
 		sPara = UtilPay.buildRequestPara(sPara, key);
 		return sPara;
-	}
-	
-	/**
-	 * 签名字符串
-	 * @param text 要签名的字符串
-	 * @param key 签名密匙
-	 * @return 签名结果
-	 */
-	public static String sign(String text,String key) {
-		text = text + key;
-		return DigestUtils.md5Hex(getContentBytes(text, input_charset));
-	}
-
-	/**
-	 * 签名字符�?
-	 * @param text 要签名的字符串
-	 * @param sign 签名结果
-	 * @param key 签名密匙
-	 * @return 签名结果
-	 */
-	public static boolean verify(String text, String sign,String key) {
-		text = text + key;
-		String mysign = DigestUtils.md5Hex(getContentBytes(text, input_charset));
-		if (mysign.equals(sign)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * @param content
-	 * @param charset
-	 * @throws SignatureException
-	 * @throws UnsupportedEncodingException
-	 */
-	private static byte[] getContentBytes(String content, String charset) {
-		if (charset == null || "".equals(charset)) {
-			return content.getBytes();
-		}
-		try {
-			return content.getBytes(charset);
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("MD5签名过程中出现错�?指定的编码集不对,您目前指定的编码集是:"+ charset);
-		}
 	}
 
 	/**
@@ -126,7 +73,7 @@ public class UtilPay {
      */
 	public static Map<String, String> buildRequestPara(Map<String, String> sParaTemp,String key) {
 		Map<String, String> sPara = paraFilter(sParaTemp);
-		String mysign = assemblySign(sPara,key);
+		String mysign = assemblySign(YoiPayConfig.INPUT_CHARSET_UTF_8,sPara,key);
 		sPara.put("sign", mysign);
 		return sPara;
     }
@@ -136,18 +83,24 @@ public class UtilPay {
 	 * @param map 参数
 	 * @return
 	 */
-	public static String assemblySign(Map<String, String> map,String key) {
-		StringBuffer parms = new StringBuffer();
-		String[] strs = new String[map.size()];
-		int i = 0;
-		for (Map.Entry<String, String> entry : map.entrySet()) {
-			strs[i++] = entry.getKey();
+	public static String assemblySign(String characterEncoding,Map<String, String> map,String key) {
+		StringBuffer sb = new StringBuffer();
+		SortedMap mapParams=new TreeMap(map);
+		Set es = mapParams.entrySet();//所有参与传参的参数按照accsii排序（升序）
+		Iterator it = es.iterator();
+		while(it.hasNext()) {
+			Map.Entry entry = (Map.Entry)it.next();
+			String k = (String)entry.getKey();
+			Object v = entry.getValue();
+			if(null != v && !"".equals(v)
+					&& !"sign".equals(k) && !"key".equals(k)) {
+				sb.append(k + "=" + v + "&");
+			}
 		}
-		Arrays.sort(strs);
-		for (String str : strs) {
-			parms.append(str + "=" + map.get(str) + "&");
-		}
-		return sign(parms.toString(),key);
+		sb.append("key=" + YoiPayConfig.key);
+		System.out.println("字符串拼接后是："+sb.toString());
+		String sign = MD5Util.MD5Encode(sb.toString(),characterEncoding).toUpperCase();
+		return sign;
 	}
 
     /**
@@ -184,8 +137,8 @@ public class UtilPay {
     public static String sendPostInfo(Map<String, String> sParaTemp,String url,String key) throws Exception {
         //待请求参数数组
 		Map<String, String> sPara = buildRequestPara(sParaTemp, key);
-		Result result = SendRequest.sendPost(url, null, sPara,input_charset);
-		String strResult = EntityUtils.toString(result.getHttpEntity(),input_charset);
+		Result result = SendRequest.sendPost(url, null, sPara,YoiPayConfig.INPUT_CHARSET_UTF_8);
+		String strResult = EntityUtils.toString(result.getHttpEntity(),YoiPayConfig.INPUT_CHARSET_UTF_8);
         return strResult;
     }
 

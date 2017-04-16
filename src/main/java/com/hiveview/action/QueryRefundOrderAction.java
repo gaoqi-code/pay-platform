@@ -7,7 +7,7 @@ import com.hiveview.common.pay.YoiPaySubmit;
 import com.hiveview.util.ProperManager;
 import com.hiveview.util.UtilPay;
 import com.hiveview.util.YoiPayUtil;
-import org.apache.log4j.Logger;
+import com.hiveview.util.log.LogMgr;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,9 +26,6 @@ import java.util.Map;
 @RequestMapping("/refundQuery")
 public class QueryRefundOrderAction {
 
-    protected Logger log = Logger.getLogger(QueryRefundOrderAction.class);
-
-
     /**
      * queryRefundOrder:(单笔退款订单查询).
      * @param request
@@ -41,11 +38,21 @@ public class QueryRefundOrderAction {
         Map<?, ?> map = request.getParameterMap();
         // 组装请求参数
         Map<String, String> sPra = UtilPay.payReturnParamsFormat(map, null);
+
+        // 验证请求是否合法
+        LogMgr.writeSysInfoLog("开始验证请求是否合法>>>>>>>>>>>>>>>>>>>>>>");
+        if (!UtilPay.resolvePara(sPra,YoiPayConfig.key)) {
+            LogMgr.writeSysInfoLog("验证失败>>>>>>>>>>>>>>>>>>>>>>");
+            mav.getModel().put("result", "请求非法！");
+            mav.setViewName("pay/notify_url");
+            return mav;
+        }
+
         sPra.put("merchantId", YoiPayConfig.MERCHANT_ID);//商户代码
-        log.debug("sPra>>>>>>>>>>>>>>>>>>>>>>" + sPra.toString());
+        LogMgr.writeSysInfoLog("sPra>>>>>>>>>>>>>>>>>>>>>>" + sPra.toString());
 
         // 组装请求数据
-        Map<String, String> sParaTemp = YoiPayUtil.assemblyAlipayParams(sPra, Constants.INTERFACE_NAME_QUERYREFUNDORDER);
+        Map<String, String> sParaTemp = YoiPayUtil.assemblyYoyipayParams(sPra, Constants.INTERFACE_NAME_QUERYREFUNDORDER);
 
         // 建立请求
         String url= ProperManager.getString("yoipay.query.refund.url");

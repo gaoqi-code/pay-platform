@@ -16,7 +16,7 @@ public class OrderVo {
     private String returnURL;
     private String notifyURL;
     private String cardType;
-    private String userId;
+    private Integer userId;
     private String goodsType;
     private String goodsName;
     private String isBind;
@@ -76,11 +76,11 @@ public class OrderVo {
         this.cardType = cardType;
     }
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 

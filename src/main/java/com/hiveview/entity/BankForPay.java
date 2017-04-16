@@ -13,13 +13,9 @@ import java.util.List;
 
 public class BankForPay {
 
-    @XStreamAlias("bankName")
     private  String bankName;
-    @XStreamAlias("bankID")
     private  String bankID;
-    @XStreamAlias("otherBankID")
     private  String otherBankID;
-    @XStreamAlias("cartType")
     private  String cartType;
 
     public String getBankName() {

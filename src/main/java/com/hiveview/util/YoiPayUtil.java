@@ -3,6 +3,7 @@ package com.hiveview.util;
 import com.hiveview.common.pay.CertTools;
 import com.hiveview.common.pay.ProcessMessage;
 import com.hiveview.common.pay.YoiPayConfig;
+import com.hiveview.util.log.LogMgr;
 import org.apache.log4j.Logger;
 
 import java.nio.charset.Charset;
@@ -15,29 +16,29 @@ import java.util.Map;
  * @version
  */
 public class YoiPayUtil {
-	public static String key = "wrry7ky3ont1f57fcznd8d1kzq9ystsd";
-	
+
 	/**
 	 * assemblyAlipayParams:(组装要提交给甬易支付平台的参数集合).
 	 * @author zhangsw
 	 * @param sPra 参数集合
 	 * @return
 	 */
-	public static Map<String, String> assemblyAlipayParams(Map<String, String> sPra,String interfaceName){
-
+	public static Map<String, String> assemblyYoyipayParams(Map<String, String> sPra,String interfaceName){
+		//移除加密串
+		sPra.remove("sign");
 		//商品名称
 		String goodsName=sPra.get("goodsName");
 		//交易数据
-		String xmlSourceData=MapToXmlUtil.callMapToXML(sPra);
-		System.out.println("xmlSourceData>>>>>>>>>>>>>>>>>>>>>>"+xmlSourceData);
+		String xmlSourceData=XmlUtil.callMapToXML(sPra,YoiPayConfig.XML_ROOT_NAME);
+		LogMgr.writeSysInfoLog("xmlSourceData>>>>>>>>>>>>>>>>>>>>>>"+xmlSourceData);
 
 		//base64加密用GBK编码
 		String tranData = ProcessMessage.Base64Encode(xmlSourceData.getBytes(Charset.forName("GBK")));
-		System.out.println("tranData>>>>>>>>>>>>>>>>>>>>>>"+tranData);
+		LogMgr.writeSysInfoLog("tranData>>>>>>>>>>>>>>>>>>>>>>"+tranData);
 
 		//签名模式：ITRUS
 		String signMsg = CertTools.signMessage(xmlSourceData);
-		System.out.println("signMsg>>>>>>>>>>>>>>>>>>>>>>"+signMsg);
+		LogMgr.writeSysInfoLog("signMsg>>>>>>>>>>>>>>>>>>>>>>"+signMsg);
 
 		// 把请求参数打包成数组
 		Map<String, String> sParaTemp = new HashMap<String, String>();

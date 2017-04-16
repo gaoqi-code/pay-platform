@@ -6,14 +6,16 @@ import com.hiveview.common.pay.CertTools;
 import com.hiveview.common.pay.ProcessMessage;
 import com.hiveview.common.pay.YoiPayConfig;
 import com.hiveview.common.pay.YoiPaySubmit;
+import com.hiveview.entity.BankForPay;
 import com.hiveview.entity.OrderInfo;
 import com.hiveview.entity.OrderVo;
-import com.hiveview.entity.UserBalanceDetail;
 import com.hiveview.service.OrderInfoService;
 import com.hiveview.service.UserBalanceDetailService;
 import com.hiveview.service.UserService;
 import com.hiveview.util.*;
 import com.hiveview.util.log.LogMgr;
+import net.sf.json.JSON;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,8 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -46,18 +50,17 @@ public class PayOrderAction {
 	@RequestMapping(value="payOrder", method = RequestMethod.POST)
 	public ModelAndView pay(HttpServletRequest request,ModelAndView mav,OrderVo orderVo) {
 
-		// 验证请求是否合法
-//		LogMgr.writeSysInfoLog("开始验证请求是否合法>>>>>>>>>>>>>>>>>>>>>>");
-//		if (!UtilPay.resolvePara(request,YoiPayUtil.key)) {
-//			LogMgr.writeSysInfoLog("验证失败>>>>>>>>>>>>>>>>>>>>>>");
-//			mav.getModel().put("result", "请求非法！");
-//			mav.setViewName("notify_url");
-//			return mav;
-//		}
-
 		Map<?, ?> map = request.getParameterMap();
 		// 组装请求参数
 		Map<String, String> sPra = UtilPay.payReturnParamsFormat(map, null);
+		// 验证请求是否合法
+		LogMgr.writeSysInfoLog("开始验证请求是否合法>>>>>>>>>>>>>>>>>>>>>>");
+		if (!UtilPay.resolvePara(sPra,YoiPayConfig.key)) {
+			LogMgr.writeSysInfoLog("验证失败>>>>>>>>>>>>>>>>>>>>>>");
+			mav.getModel().put("result", "请求非法！");
+			mav.setViewName("pay/notify_url");
+			return mav;
+		}
 
 		//判断参数是否缺少参数
 		LogMgr.writeSysInfoLog("开始验证参数是否为空>>>>>>>>>>>>>>>>>>>>>>");
@@ -76,15 +79,17 @@ public class PayOrderAction {
 				}
 			}
 		}
+		String orderNo = DateUtil.getOrderNum() + DateUtil.getThree();
+
+		sPra.put("orderNo", orderNo);//商户代码
 		sPra.put("merchantId", YoiPayConfig.MERCHANT_ID);//商户代码
 		sPra.put("notifyURL", ProperManager.getString("pay.notify.url"));
 		sPra.put("returnURL", ProperManager.getString("pay.return.url"));
 		LogMgr.writeSysInfoLog("sPra>>>>>>>>>>>>>>>>>>>>>>" + sPra.toString());
 
-		String orderNo = DateUtil.getOrderNum() + DateUtil.getThree();
 		OrderInfo orderInfo=new OrderInfo();
 		orderInfo.setOrderNo(orderNo);
-		orderInfo.setUserId(14);
+		orderInfo.setUserId(orderVo.getUserId());
 		orderInfo.setDataStatus(OrderInfo.ORDER_SATTUS_PAY);
 		orderInfo.setProductName(orderVo.getGoodsName());
 		orderInfo.setTotalFee(orderVo.getOrderAmt());
@@ -104,7 +109,7 @@ public class PayOrderAction {
 		}
 
 		// 组装请求数据
-		Map<String, String> sParaTemp = YoiPayUtil.assemblyAlipayParams(sPra, Constants.INTERFACE_NAME_PAY);
+		Map<String, String> sParaTemp = YoiPayUtil.assemblyYoyipayParams(sPra, Constants.INTERFACE_NAME_PAY);
 		// 建立请求
 		String sHtmlText = YoiPaySubmit.buildRequest(sParaTemp, "post", "确认");
 		// 添加请求信息到本地数据库
@@ -127,8 +132,17 @@ public class PayOrderAction {
 		Map<String, String> sPra = UtilPay.payReturnParamsFormat(map, null);
 		LogMgr.writeSysInfoLog("sPra>>>>>>>>>>>>>>>>>>>>>>" + sPra.toString());
 
+		// 验证请求是否合法
+		LogMgr.writeSysInfoLog("开始验证请求是否合法>>>>>>>>>>>>>>>>>>>>>>");
+		if (!UtilPay.resolvePara(sPra,YoiPayConfig.key)) {
+			LogMgr.writeSysInfoLog("验证失败>>>>>>>>>>>>>>>>>>>>>>");
+			mav.getModel().put("result", "请求非法！");
+			mav.setViewName("pay/notify_url");
+			return mav;
+		}
+
 		// 组装请求数据
-		Map<String, String> sParaTemp = YoiPayUtil.assemblyAlipayParams(sPra, Constants.INTERFACE_NAME_GETBANKS);
+		Map<String, String> sParaTemp = YoiPayUtil.assemblyYoyipayParams(sPra, Constants.INTERFACE_NAME_GETBANKS);
 
 		// 建立请求
 		String url=ProperManager.getString("yoipay.getbanksforpay.url");
@@ -138,14 +152,12 @@ public class PayOrderAction {
 			String result="";
 			if(null!=base64){
 				result = new String(ProcessMessage.Base64Decode(base64),"GBK");
-				//签名验证
-				String tranData="";
-				String signData="";
-				if(!CertTools.verifyMessage(signData,tranData,YoiPayConfig.INPUT_CHARSET_GBK)){
-					mav.getModel().put("result", "结果通知验签失败！");
-				}else {
-					mav.getModel().put("result", result);
-				}
+				Map<String,Object> mapResult=XmlUtil.xml2map(result,false);
+				String bankCount= (String) mapResult.get("bankCount");
+				Map<String,Object> bankRowsMap= (Map<String, Object>) mapResult.get("bankList");
+				List<BankForPay> bankList =(ArrayList<BankForPay>) bankRowsMap.get("bankRow");
+				mav.getModel().put("bankCount", bankCount);
+				mav.getModel().put("bankList", bankList);
 			}
 
 		} catch (Exception e) {
@@ -191,7 +203,7 @@ public class PayOrderAction {
 					mav.setViewName("pay/notify_url");
 					return mav;
 				}else {
-					Map<String, String>  mapValues= XmlUtil.getResult(xmlString);
+					Map<String, String>  mapValues= XmlUtil.xml2map(xmlString,false);
 					 tranSerialNo=mapValues.get("tranSerialNo");//甬易支付平台交易号
 					 orderNo=mapValues.get("orderNo");//原商户订单号
 					// 根据返回订单号获取订单详情
@@ -235,7 +247,7 @@ public class PayOrderAction {
 		Map<String, String> newHashMap = Maps.newHashMap();
 		newHashMap.put("orderNo", orderNo);
 		newHashMap.put("tradNo",tranSerialNo );
-		newHashMap = UtilPay.assemblyCallBackPara(newHashMap,YoiPayUtil.key);
+		newHashMap = UtilPay.assemblyCallBackPara(newHashMap,YoiPayConfig.key);
 		return new ModelAndView(new RedirectView(redirectUrl), newHashMap);
 	}
 
@@ -272,7 +284,7 @@ public class PayOrderAction {
 				if(!sign){
 					mav.getModel().put("result", "结果验签失败！");
 				}else {
-					Map<String, String>  mapValues= XmlUtil.getResult(xmlString);
+					Map<String, String>  mapValues= XmlUtil.xml2map(xmlString,false);
 					tranSerialNo=mapValues.get("tranSerialNo");//甬易支付平台交易号
 					orderNo=mapValues.get("orderNo");//原商户订单号
 					// 根据返回订单号获取订单详情
@@ -302,7 +314,7 @@ public class PayOrderAction {
 						newHashMap.put("orderNo",orderNo);
 						newHashMap.put("tradNo",tranSerialNo);
 						LogMgr.writeSysInfoLog("CallBack>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Start");
-						String result = UtilPay.sendPostInfo(newHashMap, redirectUrl, YoiPayUtil.key);
+						String result = UtilPay.sendPostInfo(newHashMap, redirectUrl, YoiPayConfig.key);
 						mav.getModel().put("result", result);
 						LogMgr.writeSysInfoLog("CallBack>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>End");
 					}

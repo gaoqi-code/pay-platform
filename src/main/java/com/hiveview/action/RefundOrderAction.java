@@ -8,6 +8,7 @@ import com.hiveview.common.pay.YoiPaySubmit;
 import com.hiveview.util.ProperManager;
 import com.hiveview.util.UtilPay;
 import com.hiveview.util.YoiPayUtil;
+import com.hiveview.util.log.LogMgr;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +28,6 @@ import java.util.Map;
 @RequestMapping("/refund")
 public class RefundOrderAction {
 
-    protected Logger log = Logger.getLogger(QueryRefundOrderAction.class);
-
     /**
      * refundOrder:(单笔退款).
      * @param request
@@ -41,12 +40,22 @@ public class RefundOrderAction {
         Map<?, ?> map = request.getParameterMap();
         // 组装请求参数
         Map<String, String> sPra = UtilPay.payReturnParamsFormat(map, null);
+
+        // 验证请求是否合法
+        LogMgr.writeSysInfoLog("开始验证请求是否合法>>>>>>>>>>>>>>>>>>>>>>");
+        if (!UtilPay.resolvePara(sPra,YoiPayConfig.key)) {
+            LogMgr.writeSysInfoLog("验证失败>>>>>>>>>>>>>>>>>>>>>>");
+            mav.getModel().put("result", "请求非法！");
+            mav.setViewName("pay/notify_url");
+            return mav;
+        }
+
         sPra.put("merchantId", YoiPayConfig.MERCHANT_ID);//商户代码
         sPra.put("notifyURL", ProperManager.getString("yoipay.refund.notify.url"));
-        log.debug("sPra>>>>>>>>>>>>>>>>>>>>>>" + sPra.toString());
+        LogMgr.writeSysInfoLog("sPra>>>>>>>>>>>>>>>>>>>>>>" + sPra.toString());
 
         // 组装请求数据
-        Map<String, String> sParaTemp = YoiPayUtil.assemblyAlipayParams(sPra, Constants.INTERFACE_NAME_REFUNDORDER);
+        Map<String, String> sParaTemp = YoiPayUtil.assemblyYoyipayParams(sPra, Constants.INTERFACE_NAME_REFUNDORDER);
 
         // 建立请求
         String url= ProperManager.getString("yoipay.refund.url");
@@ -76,7 +85,7 @@ public class RefundOrderAction {
     public ModelAndView refundNotifyUrl(HttpServletRequest request,ModelAndView mav){
         //获取甬易支付POST过来反馈信息
         Map<String, String> params = UtilPay.getpayReturnParamsForVerify(request);
-        log.debug("params>>>>>>>>>>>>>>>>>>>>>>" + params.toString());
+        LogMgr.writeSysInfoLog("params>>>>>>>>>>>>>>>>>>>>>>" + params.toString());
         try {
             if(null!=params){
 
