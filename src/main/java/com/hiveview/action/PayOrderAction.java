@@ -222,7 +222,7 @@ public class PayOrderAction {
 					//支付成功
 					if(Constants.YOYI_TRANSTATE_HASPAY.equals(tranStat)){
 						//判断是否处理过业务
-						if(String.valueOf(order.getDataStatus())!=Constants.YOYI_TRANSTATE_HASPAY){
+						if(Integer.valueOf(Constants.YOYI_TRANSTATE_HASPAY)!=order.getDataStatus()){
 							//更新订单状态
 							order.setDataStatus(Integer.valueOf(tranStat));
 							order.setTradeNo(tranSerialNo);
@@ -301,7 +301,7 @@ public class PayOrderAction {
 					//支付成功
 					if(Constants.YOYI_TRANSTATE_HASPAY.equals(tranStat)){
 						//判断是否处理过业务
-						if(String.valueOf(order.getDataStatus())!=Constants.YOYI_TRANSTATE_HASPAY){
+						if(Integer.valueOf(Constants.YOYI_TRANSTATE_HASPAY)!=order.getDataStatus()){
 							//更新订单状态
 							order.setDataStatus(Integer.valueOf(tranStat));
 							order.setTradeNo(tranSerialNo);
