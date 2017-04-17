@@ -200,7 +200,6 @@ public class PayOrderAction {
 
 				if(!sign){
 					mav.getModel().put("result", "结果验签失败！");
-					mav.setViewName("pay/notify_url");
 					return mav;
 				}else {
 					Map<String, String>  mapValues= XmlUtil.xml2map(xmlString,false);
@@ -212,7 +211,6 @@ public class PayOrderAction {
 					if (order == null) {
 						LogMgr.writeSysInfoLog(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>订单不存在");
 						mav.getModel().put("result", "订单不存在！");
-						mav.setViewName("pay/notify_url");
 						return mav;
 					}
 					//支付回调地址
@@ -232,23 +230,21 @@ public class PayOrderAction {
 						}
 
 					}
+					//回调链接
+					Map<String, String> newHashMap = Maps.newHashMap();
+					newHashMap.put("orderNo", orderNo);
+					newHashMap.put("tradNo",tranSerialNo );
+					newHashMap = UtilPay.assemblyCallBackPara(newHashMap,YoiPayConfig.key);
+					return new ModelAndView(new RedirectView(redirectUrl), newHashMap);
 				}
-
 			}else {
 				mav.getModel().put("result", "结果为空！");
-				mav.setViewName("pay/notify_url");
-				return mav;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		//回调链接
-		Map<String, String> newHashMap = Maps.newHashMap();
-		newHashMap.put("orderNo", orderNo);
-		newHashMap.put("tradNo",tranSerialNo );
-		newHashMap = UtilPay.assemblyCallBackPara(newHashMap,YoiPayConfig.key);
-		return new ModelAndView(new RedirectView(redirectUrl), newHashMap);
+		mav.setViewName("pay/notify_url");
+		return mav;
 	}
 
 
