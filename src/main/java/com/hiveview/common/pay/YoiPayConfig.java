@@ -1,6 +1,7 @@
 package com.hiveview.common.pay;
 
 
+import com.hiveview.util.ProperManager;
 
 /**
  * AlipayConfig:{支付宝帐号信息类}
@@ -14,7 +15,7 @@ public class YoiPayConfig {
 	public static String key = "GLX19894270GLZ19894270GLX1989427";
 
 	//商户代码
-	public static String MERCHANT_ID  = "M100002065";
+	public static String MERCHANT_ID  = ProperManager.getString("merchant_id");
 	//版本号
 	public static String VERSION ="B2C1.0";
 	//xml报文根节点

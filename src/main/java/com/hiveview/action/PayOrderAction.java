@@ -150,7 +150,7 @@ public class PayOrderAction {
 			//base64解码
 			String base64 = YoiPaySubmit.sendPostInfo(sParaTemp,url);
 			String result="";
-			if(null!=base64){
+			if(null!=base64 && !"".equals(base64) ){
 				result = new String(ProcessMessage.Base64Decode(base64),"GBK");
 				Map<String,Object> mapResult=XmlUtil.xml2map(result,false);
 				String bankCount= (String) mapResult.get("bankCount");
