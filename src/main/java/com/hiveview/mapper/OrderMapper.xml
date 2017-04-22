@@ -13,22 +13,25 @@
     <result column="trade_no" property="tradeNo" jdbcType="VARCHAR" />
     <result column="notify_url" property="notifyUrl" jdbcType="VARCHAR" />
     <result column="return_url" property="returnUrl" jdbcType="VARCHAR" />
+    <result column="business_no" property="businessNo" jdbcType="VARCHAR" />
+    <result column="from_ip" property="fromIp" jdbcType="VARCHAR" />
+    <result column="from_os" property="fromOs" jdbcType="VARCHAR" />
 
   </resultMap>
   <sql id="Base_Column_List" >
-    id, product_name, data_status, total_fee, add_time, update_time, user_id, order_no,trade_no,notify_url,return_url
+    id, product_name, data_status, total_fee, add_time, update_time, user_id, order_no,trade_no,notify_url,return_url,business_no,from_ip,from_os
   </sql>
 
   <select id="getOrderInfoByOrderNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from h_orders
+    from sys_orders
     where order_no = #{orderNo}
   </select>
 
 
   <insert id="saveOrderInfo" parameterType="com.hiveview.entity.OrderInfo" >
-   INSERT INTO h_orders(
+   INSERT INTO sys_orders(
 	id,
 	product_name,
 	data_status,
@@ -39,7 +42,10 @@
 	order_no,
 	trade_no,
 	notify_url,
-	return_url
+	return_url,
+	business_no,
+	from_ip,
+	from_os
     )
   VALUES
 	(
@@ -53,12 +59,16 @@
 		#{orderNo,jdbcType=VARCHAR},
 		#{tradeNo,jdbcType=VARCHAR},
 		#{notifyUrl,jdbcType=VARCHAR},
-		#{returnUrl,jdbcType=VARCHAR}
+		#{returnUrl,jdbcType=VARCHAR},
+		#{businessNo,jdbcType=VARCHAR},
+		#{fromIp,jdbcType=VARCHAR},
+		#{fromOs,jdbcType=VARCHAR}
+
 	)
   </insert>
 
   <update id="updateOrderInfo" parameterType="com.hiveview.entity.OrderInfo" >
-    update h_orders
+    update sys_orders
     <set >
       <if test="productName != null" >
         product_name = #{productName,jdbcType=VARCHAR},
@@ -92,7 +102,7 @@
   </update>
 
   <update id="updateByPrimaryKey" parameterType="com.hiveview.entity.OrderInfo" >
-    update h_orders
+    update sys_orders
     set product_name = #{productName,jdbcType=VARCHAR},
       data_status = #{dataStatus,jdbcType=INTEGER},
       total_fee = #{totalFee,jdbcType=DECIMAL},

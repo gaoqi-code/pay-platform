@@ -27,10 +27,13 @@ public class OrderInfo {
 
     private String orderNo;
     private String tradeNo;
+    private String businessNo;
 
     private String notifyUrl;//服务器异步通知页面路径
 
     private String returnUrl;//页面跳转同步通知页面路径
+    private String fromIp;//来源ip
+    private String fromOs;//来源系统标识
 
     public Integer getId() {
         return id;
@@ -118,5 +121,29 @@ public class OrderInfo {
 
     public void setReturnUrl(String returnUrl) {
         this.returnUrl = returnUrl;
+    }
+
+    public String getBusinessNo() {
+        return businessNo;
+    }
+
+    public void setBusinessNo(String businessNo) {
+        this.businessNo = businessNo;
+    }
+
+    public String getFromIp() {
+        return fromIp;
+    }
+
+    public void setFromIp(String fromIp) {
+        this.fromIp = fromIp;
+    }
+
+    public String getFromOs() {
+        return fromOs;
+    }
+
+    public void setFromOs(String fromOs) {
+        this.fromOs = fromOs;
     }
 }

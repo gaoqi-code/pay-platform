@@ -136,8 +136,8 @@ public class UtilPay {
      */
     public static String sendPostInfo(Map<String, String> sParaTemp,String url,String key) throws Exception {
         //待请求参数数组
-		Map<String, String> sPara = buildRequestPara(sParaTemp, key);
-		Result result = SendRequest.sendPost(url, null, sPara,YoiPayConfig.INPUT_CHARSET_UTF_8);
+		//Map<String, String> sPara = buildRequestPara(sParaTemp, key);
+		Result result = SendRequest.sendPost(url, null, sParaTemp,YoiPayConfig.INPUT_CHARSET_UTF_8);
 		String strResult = EntityUtils.toString(result.getHttpEntity(),YoiPayConfig.INPUT_CHARSET_UTF_8);
         return strResult;
     }

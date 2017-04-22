@@ -67,6 +67,7 @@ public class PayOrderAction {
 		for (Map.Entry<String, String> entry : sPra.entrySet()) {
 			if (StringUtils.isBlank(entry.getValue())) {
 				if (entry.getKey().equals("curType")
+						|| entry.getKey().equals("orderNo")
 						|| entry.getKey().equals("userId")
 						|| entry.getKey().equals("orderAmt")
 						||entry.getKey().equals("notifyURL")
@@ -80,7 +81,7 @@ public class PayOrderAction {
 			}
 		}
 		String orderNo = DateUtil.getOrderNum() + DateUtil.getThree();
-
+		String businessNo=sPra.get("orderNo");
 		sPra.put("orderNo", orderNo);//商户代码
 		sPra.put("merchantId", YoiPayConfig.MERCHANT_ID);//商户代码
 		sPra.put("notifyURL", ProperManager.getString("pay.notify.url"));
@@ -89,6 +90,7 @@ public class PayOrderAction {
 
 		OrderInfo orderInfo=new OrderInfo();
 		orderInfo.setOrderNo(orderNo);
+		orderInfo.setBusinessNo(businessNo);
 		orderInfo.setUserId(orderVo.getUserId());
 		orderInfo.setDataStatus(OrderInfo.ORDER_SATTUS_PAY);
 		orderInfo.setProductName(orderVo.getGoodsName());
@@ -214,7 +216,7 @@ public class PayOrderAction {
 						return mav;
 					}
 					//支付回调地址
-					 redirectUrl = order.getNotifyUrl();
+					redirectUrl = order.getReturnUrl();
 					BigDecimal orderAmt=BigDecimal.valueOf(Double.valueOf(mapValues.get("orderAmt")));
 					String tranStat=mapValues.get("tranStat");
 					//支付成功
@@ -226,16 +228,21 @@ public class PayOrderAction {
 							order.setTradeNo(tranSerialNo);
 							orderInfoService.updateOrderInfo(order);
 							//更新用户余额
-							userService.updateBalance(order.getUserId(),orderAmt,orderNo);
+							//userService.updateBalance(order.getUserId(),orderAmt,orderNo);
 						}
 
+						//回调链接
+						Map<String, String> newHashMap = Maps.newHashMap();
+						newHashMap.put("orderNo", order.getBusinessNo());
+						newHashMap.put("code", "200");
+						newHashMap.put("orderAmt",String.valueOf(orderAmt));
+						String reSign=UtilPay.assemblySign(YoiPayConfig.INPUT_CHARSET_UTF_8,newHashMap, YoiPayConfig.key);
+						newHashMap.put("sign",reSign );
+						newHashMap.remove("orderAmt");
+						newHashMap.put("tradeNo",tranSerialNo );
+
+						return new ModelAndView(new RedirectView(redirectUrl), newHashMap);
 					}
-					//回调链接
-					Map<String, String> newHashMap = Maps.newHashMap();
-					newHashMap.put("orderNo", orderNo);
-					newHashMap.put("tradNo",tranSerialNo );
-					newHashMap = UtilPay.assemblyCallBackPara(newHashMap,YoiPayConfig.key);
-					return new ModelAndView(new RedirectView(redirectUrl), newHashMap);
 				}
 			}else {
 				mav.getModel().put("result", "结果为空！");
@@ -303,12 +310,20 @@ public class PayOrderAction {
 							order.setTradeNo(tranSerialNo);
 							orderInfoService.updateOrderInfo(order);
 							//更新用户余额
-							userService.updateBalance(order.getUserId(),orderAmt,orderNo);
+							//userService.updateBalance(order.getUserId(),orderAmt,orderNo);
 						}
 						//定义下级转发参数
 						Map<String,String> newHashMap = Maps.newHashMap();
-						newHashMap.put("orderNo",orderNo);
-						newHashMap.put("tradNo",tranSerialNo);
+						newHashMap.put("orderNo", order.getBusinessNo());
+						newHashMap.put("code", "200");
+						newHashMap.put("orderAmt",String.valueOf(orderAmt));
+
+						String reSign=UtilPay.assemblySign(YoiPayConfig.INPUT_CHARSET_UTF_8,newHashMap, YoiPayConfig.key);
+						newHashMap.put("sign",reSign );
+						newHashMap.remove("orderAmt");
+
+						newHashMap.put("tradeNo",tranSerialNo );
+
 						LogMgr.writeSysInfoLog("CallBack>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Start");
 						String result = UtilPay.sendPostInfo(newHashMap, redirectUrl, YoiPayConfig.key);
 						mav.getModel().put("result", result);

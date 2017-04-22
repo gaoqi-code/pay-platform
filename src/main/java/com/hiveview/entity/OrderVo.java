@@ -27,6 +27,9 @@ public class OrderVo {
     private String cardNo;
     private String MSMerchantIdB;
     private String returnFlag;
+    private String businessNo;
+    private String fromIp;//来源ip
+    private String fromOs;//来源系统标识
 
     public BigDecimal getOrderAmt() {
         return orderAmt;
@@ -162,5 +165,29 @@ public class OrderVo {
 
     public void setReturnFlag(String returnFlag) {
         this.returnFlag = returnFlag;
+    }
+
+    public String getBusinessNo() {
+        return businessNo;
+    }
+
+    public void setBusinessNo(String businessNo) {
+        this.businessNo = businessNo;
+    }
+
+    public String getFromIp() {
+        return fromIp;
+    }
+
+    public void setFromIp(String fromIp) {
+        this.fromIp = fromIp;
+    }
+
+    public String getFromOs() {
+        return fromOs;
+    }
+
+    public void setFromOs(String fromOs) {
+        this.fromOs = fromOs;
     }
 }
