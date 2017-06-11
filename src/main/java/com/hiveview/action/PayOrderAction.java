@@ -217,7 +217,8 @@ public class PayOrderAction {
 					}
 					//支付回调地址
 					redirectUrl = order.getReturnUrl();
-					BigDecimal orderAmt=BigDecimal.valueOf(Double.valueOf(mapValues.get("orderAmt")));
+					//BigDecimal orderAmt=BigDecimal.valueOf(Double.valueOf(mapValues.get("orderAmt")));
+					BigDecimal orderAmt=new BigDecimal(mapValues.get("orderAmt")).setScale(2,BigDecimal.ROUND_DOWN);
 					String tranStat=mapValues.get("tranStat");
 					//支付成功
 					if(Constants.YOYI_TRANSTATE_HASPAY.equals(tranStat)){
@@ -299,7 +300,7 @@ public class PayOrderAction {
 					}
 					//支付回调地址
 					redirectUrl = order.getNotifyUrl();
-					BigDecimal orderAmt=BigDecimal.valueOf(Double.valueOf(mapValues.get("orderAmt")));
+					BigDecimal orderAmt=new BigDecimal(mapValues.get("orderAmt")).setScale(2,BigDecimal.ROUND_DOWN);
 					String tranStat=mapValues.get("tranStat");
 					//支付成功
 					if(Constants.YOYI_TRANSTATE_HASPAY.equals(tranStat)){
@@ -339,5 +340,10 @@ public class PayOrderAction {
 		}
 		mav.setViewName("pay/notify_url");
 		return mav;
+	}
+
+	public static void main(String[] args) {
+		BigDecimal orderAmt=new BigDecimal("0.1").setScale(2,BigDecimal.ROUND_DOWN);
+		System.out.println(String.valueOf(orderAmt));
 	}
 }
