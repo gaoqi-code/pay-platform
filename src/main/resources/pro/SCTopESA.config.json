@@ -4,7 +4,7 @@
 
   "trustCA" : [
     {
-      "caCertPath": "D:\\itrus\\yoyi.cer",
+      "caCertPath": "/data/payment/yoyi.cer",
       "checkRevoke": false
     }
   ], 
@@ -13,7 +13,7 @@
       "name": "KeyStore", 
       "type": "JKS", 
       "provider": "", 
-      "keyStorePath": "D:\\itrus\\yy.jks",
+      "keyStorePath": "/data/payment/yy.jks",
       "password": "2wsxzaq1"
     }
   ]
