@@ -80,6 +80,7 @@ public class PayOrderAction {
 				}
 			}
 		}
+		String clientIp=PCAddress.getIpAddress(request);
 		String orderNo = DateUtil.getOrderNum() + DateUtil.getThree();
 		String businessNo=sPra.get("orderNo");
 		sPra.put("orderNo", orderNo);//商户代码
@@ -97,7 +98,7 @@ public class PayOrderAction {
 		orderInfo.setTotalFee(orderVo.getOrderAmt());
 		orderInfo.setNotifyUrl(orderVo.getNotifyURL());
 		orderInfo.setReturnUrl(orderVo.getReturnURL());
-
+		orderInfo.setFromIp(clientIp);
 		// 判断是否为重复请求，或者修改后请求
 		OrderInfo order=orderInfoService.getOrderInfoByOrderNo(orderNo);
 		if(null==order){
